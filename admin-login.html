@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion Admin | CNLDS</title>
+    <link rel="stylesheet" href="./assets/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <style>
+        body {
+            background: #f5f6fa;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-container {
+            background: #fff;
+            padding: 2.5rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.08);
+            max-width: 400px;
+            width: 100%;
+        }
+        .login-container h2 {
+            margin-bottom: 1.5rem;
+            color: #1a237e;
+            text-align: center;
+        }
+        .form-group label {
+            font-weight: 500;
+        }
+        .btn-primary {
+            width: 100%;
+        }
+        .logo-admin {
+            display: block;
+            margin: 0 auto 1.5rem auto;
+            max-width: 120px;
+        }
+        .error-msg {
+            color: #c00;
+            text-align: center;
+            margin-bottom: 1rem;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <img src="./assets/images/header-logo.png" alt="Logo CNLDS" class="logo-admin">
+        <h2>Connexion Administrateur</h2>
+        <div class="error-msg" id="error-msg">Identifiants incorrects</div>
+        <form id="loginForm" autocomplete="off">
+            <div class="form-group">
+                <label for="username">Nom d'utilisateur</label>
+                <input type="text" class="form-control" id="username" placeholder="admin" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <input type="password" class="form-control" id="password" placeholder="mot de passe" required>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Se connecter</button>
+        </form>
+        
+    </div>
+    
+    <script>
+        // Identifiants d'accès
+        const ADMIN_USER = "admin";
+        const ADMIN_PASS = "cnlds2025";
+
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const user = document.getElementById('username').value.trim();
+            const pass = document.getElementById('password').value.trim();
+            if(user === ADMIN_USER && pass === ADMIN_PASS) {
+                window.location.href = "admin-dashboard.html";
+            } else {
+                document.getElementById('error-msg').style.display = "block";
+            }
+        });
+    </script>
+</body>
+</html>

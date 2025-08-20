@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des pages | CNLDS</title>
+    <link rel="stylesheet" href="./assets/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="./assets/css/style.css">
+    <style>
+        body {
+            background: #f5f6fa;
+            min-height: 100vh;
+        }
+        .admin-header {
+            background: linear-gradient(90deg, #1a237e 0%, #3949ab 100%);
+            color: #fff;
+            padding: 1.5rem 0 1rem 0;
+            text-align: center;
+            position: relative;
+        }
+        .admin-header h2 {
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        .btn-logout {
+            position: absolute;
+            right: 30px;
+            top: 30px;
+            background: #c62828;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .btn-logout:hover {
+            background: #b71c1c;
+            color: #fff;
+        }
+        .admin-container {
+            max-width: 950px;
+            margin: 2.5rem auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(26,35,126,0.10);
+            padding: 2.5rem 2rem;
+        }
+        .admin-title {
+            color: #1a237e;
+            margin-bottom: 2.5rem;
+            text-align: center;
+            font-weight: 700;
+        }
+        .admin-section {
+            margin-bottom: 2.5rem;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 1.5rem;
+        }
+        .admin-section:last-child {
+            border-bottom: none;
+        }
+        .admin-section h3 {
+            font-size: 1.15rem;
+            margin-bottom: 1rem;
+            color: #3949ab;
+            font-weight: 600;
+        }
+        .admin-section ul {
+            padding-left: 1.2rem;
+        }
+        .admin-section ul li {
+            margin-bottom: 0.7rem;
+        }
+        .admin-section ul li a {
+            color: #1a237e;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        .admin-section ul li a:hover {
+            color: #3949ab;
+            text-decoration: underline;
+        }
+        /* Sidebar style */
+        .admin-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 210px;
+            background: #1a237e;
+            color: #fff;
+            padding-top: 2.5rem;
+            z-index: 100;
+            box-shadow: 2px 0 16px rgba(26,35,126,0.08);
+        }
+        .admin-sidebar h4 {
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .admin-sidebar ul {
+            list-style: none;
+            padding: 0 0.5rem;
+        }
+        .admin-sidebar ul li {
+            margin-bottom: 1.2rem;
+        }
+        .admin-sidebar ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            display: block;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: background 0.2s, color 0.2s;
+        }
+        .admin-sidebar ul li a.active,
+        .admin-sidebar ul li a:hover {
+            background: #3949ab;
+            color: #fff;
+        }
+        .admin-main-content {
+            margin-left: 230px;
+        }
+        @media (max-width: 900px) {
+            .admin-sidebar {
+                position: static;
+                width: 100%;
+                height: auto;
+                box-shadow: none;
+                padding-top: 1rem;
+            }
+            .admin-main-content {
+                margin-left: 0;
+            }
+        }
+        @media (max-width: 600px) {
+            .admin-container {
+                padding: 1rem 0.5rem;
+            }
+            .btn-logout {
+                right: 10px;
+                top: 10px;
+                padding: 0.4rem 0.8rem;
+            }
+        }
+        .edit-btn, .delete-btn {
+            border: none;
+            border-radius: 4px;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.95rem;
+            margin-right: 0.5rem;
+            color: #fff;
+        }
+        .edit-btn {
+            background: #3949ab;
+        }
+        .edit-btn:hover {
+            background: #1a237e;
+        }
+        .delete-btn {
+            background: #c62828;
+        }
+        .delete-btn:hover {
+            background: #b71c1c;
+        }
+        .page-list-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+        }
+        .page-list-table th, .page-list-table td {
+            border: 1px solid #e0e0e0;
+            padding: 0.7rem 1rem;
+            text-align: left;
+        }
+        .page-list-table th {
+            background: #f5f6fa;
+            color: #3949ab;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar navigation -->
+    <nav class="admin-sidebar">
+        <h4>CNLDS Admin</h4>
+        <ul>
+            <li><a href="admin-dashboard.html">Tableau de bord</a></li>
+            <li><a href="admin-articles.html">Gestion des articles</a></li>
+            <li><a href="admin-pages.html" class="active">Gestion des pages</a></li>
+            <li><a href="admin-users.html">Gestion des utilisateurs</a></li>
+            <li><a href="admin-settings.html">Paramètres du site</a></li>
+        </ul>
+    </nav>
+    <div class="admin-main-content">
+        <div class="admin-header">
+            <h2>Gestion des pages</h2>
+            <a href="admin-login.html" class="btn btn-logout">Déconnexion</a>
+        </div>
+        <div class="admin-container">
+            <h1 class="admin-title">Modifier les pages du site CNLDS</h1>
+            <div class="admin-section" id="home">
+                <h3>Page d’accueil</h3>
+                <table class="page-list-table">
+                    <tr>
+                        <th>Nom de la page</th>
+                        <th>Actions</th>
+                    </tr>
+                    <tr>
+                        <td>Accueil</td>
+                        <td>
+                            <a href="edit-home.html" class="edit-btn">Modifier</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="admin-section" id="about">
+                <h3>Page À propos</h3>
+                <table class="page-list-table">
+                    <tr>
+                        <th>Nom de la page</th>
+                        <th>Actions</th>
+                    </tr>
+                    <tr>
+                        <td>À propos</td>
+                        <td>
+                            <a href="edit-about.html" class="edit-btn">Modifier</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="admin-section" id="missions">
+                <h3>Page Missions</h3>
+                <table class="page-list-table">
+                    <tr>
+                        <th>Nom de la page</th>
+                        <th>Actions</th>
+                    </tr>
+                    <tr>
+                        <td>Missions</td>
+                        <td>
+                            <a href="edit-missions.html" class="edit-btn">Modifier</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="admin-section" id="contact">
+                <h3>Page Contact</h3>
+                <table class="page-list-table">
+                    <tr>
+                        <th>Nom de la page</th>
+                        <th>Actions</th>
+                    </tr>
+                    <tr>
+                        <td>Contact</td>
+                        <td>
+                            <a href="edit-contact.html" class="edit-btn">Modifier</a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

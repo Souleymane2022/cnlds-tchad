@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des articles | CNLDS</title>
+    <link rel="stylesheet" href="./assets/bootstrap/bootstrap.min.css">
+    <style>
+        body {
+            background: #f5f6fa;
+            min-height: 100vh;
+        }
+        .admin-header {
+            background: linear-gradient(90deg, #1a237e 0%, #3949ab 100%);
+            color: #fff;
+            padding: 1.5rem 0 1rem 0;
+            text-align: center;
+            position: relative;
+        }
+        .btn-back, .btn-home {
+            position: absolute;
+            top: 30px;
+            background: #3949ab;
+            color: #fff;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: background 0.2s;
+            text-decoration: none;
+        }
+        .btn-back {
+            left: 30px;
+        }
+        .btn-home {
+            right: 30px;
+            background: #43a047;
+        }
+        .btn-back:hover {
+            background: #1a237e;
+            color: #fff;
+        }
+        .btn-home:hover {
+            background: #388e3c;
+            color: #fff;
+        }
+        .admin-container {
+            max-width: 950px;
+            margin: 2.5rem auto;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(26,35,126,0.10);
+            padding: 2.5rem 2rem;
+        }
+        .admin-title {
+            color: #1a237e;
+            margin-bottom: 2rem;
+            text-align: center;
+            font-weight: 700;
+        }
+        .article-form {
+            background: #f1f3fa;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .article-form label {
+            font-weight: 500;
+        }
+        .btn-success {
+            background: #1a237e;
+            border: none;
+            font-weight: 600;
+        }
+        .btn-success:hover {
+            background: #3949ab;
+        }
+        .table thead {
+            background: #3949ab;
+            color: #fff;
+        }
+        .table td, .table th {
+            vertical-align: middle;
+        }
+        .btn-edit, .btn-delete {
+            font-size: 0.95rem;
+            padding: 0.3rem 0.7rem;
+            border-radius: 4px;
+        }
+        .btn-edit {
+            background: #43a047;
+            color: #fff;
+            border: none;
+        }
+        .btn-edit:hover {
+            background: #388e3c;
+        }
+        .btn-delete {
+            background: #c62828;
+            color: #fff;
+            border: none;
+        }
+        .btn-delete:hover {
+            background: #b71c1c;
+        }
+        .img-preview {
+            max-width: 100px;
+            max-height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-header">
+        <a href="admin-dashboard.html" class="btn btn-back">← Tableau de bord</a>
+        <a href="index.html" class="btn btn-home">Accueil du site</a>
+        <h2>Gestion des articles du blog</h2>
+    </div>
+    <div class="admin-container">
+        <h1 class="admin-title">Ajouter un nouvel article</h1>
+        <form class="article-form" id="articleForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="titre">Titre de l'article</label>
+                <input type="text" class="form-control" id="titre" required>
+            </div>
+            <div class="form-group">
+                <label for="auteur">Auteur</label>
+                <input type="text" class="form-control" id="auteur" value="Dr Oumar Mahahamat Atti" required>
+            </div>
+            <div class="form-group">
+                <label for="date">Date de publication</label>
+                <input type="date" class="form-control" id="date" required>
+            </div>
+            <div class="form-group">
+                <label for="image">Image de l'article</label>
+                <input type="file" class="form-control" id="image" accept="image/*" ${editIndex !== null ? '' : 'required'}>
+                <img id="imgPreview" class="img-preview" style="display:none;" />
+            </div>
+            <div class="form-group">
+                <label for="contenu">Contenu</label>
+                <textarea class="form-control" id="contenu" rows="4" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-success mt-2">Ajouter l'article</button>
+        </form>
+
+        <h2 class="admin-title" style="font-size:1.3rem;">Liste des articles</h2>
+        <table class="table table-bordered table-hover" id="articlesTable">
+            <thead>
+                <tr>
+                    <th>Image</th>
+                    <th>Titre</th>
+                    <th>Auteur</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Les articles ajoutés s'affichent ici -->
+            </tbody>
+        </table>
+    </div>
+    <script>
+        // Stockage local pour la démo (remplacer par backend pour un vrai site)
+        let articles = JSON.parse(localStorage.getItem('cnlds_articles') || "[]");
+        let editIndex = null;
+        let currentImageData = "";
+
+        function renderArticles() {
+            const tbody = document.querySelector("#articlesTable tbody");
+            tbody.innerHTML = "";
+            articles.forEach((art, idx) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>
+                            ${art.image ? `<img src="${art.image}" class="img-preview" alt="Image">` : ''}
+                        </td>
+                        <td>${art.titre}</td>
+                        <td>${art.auteur}</td>
+                        <td>${art.date}</td>
+                        <td>
+                            <button class="btn btn-edit" onclick="editArticle(${idx})">Modifier</button>
+                            <button class="btn btn-delete" onclick="deleteArticle(${idx})">Supprimer</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Affichage de l'aperçu de l'image
+        document.getElementById('image').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    document.getElementById('imgPreview').src = evt.target.result;
+                    document.getElementById('imgPreview').style.display = "block";
+                    currentImageData = evt.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                document.getElementById('imgPreview').style.display = "none";
+                currentImageData = "";
+            }
+        });
+
+        document.getElementById('articleForm').onsubmit = function(e) {
+            e.preventDefault();
+            const titre = document.getElementById('titre').value.trim();
+            const auteur = document.getElementById('auteur').value.trim();
+            const date = document.getElementById('date').value;
+            const contenu = document.getElementById('contenu').value.trim();
+            let image = currentImageData;
+
+            // Si modification et pas de nouvelle image, garder l'ancienne
+            if(editIndex !== null && !image && articles[editIndex].image) {
+                image = articles[editIndex].image;
+            }
+
+            if(editIndex === null) {
+                articles.push({ titre, auteur, date, contenu, image });
+            } else {
+                articles[editIndex] = { titre, auteur, date, contenu, image };
+                editIndex = null;
+            }
+            localStorage.setItem('cnlds_articles', JSON.stringify(articles));
+            this.reset();
+            document.getElementById('auteur').value = "Dr Oumar Mahahamat Atti";
+            document.getElementById('imgPreview').style.display = "none";
+            currentImageData = "";
+            renderArticles();
+        };
+
+        window.editArticle = function(idx) {
+            const art = articles[idx];
+            document.getElementById('titre').value = art.titre;
+            document.getElementById('auteur').value = art.auteur;
+            document.getElementById('date').value = art.date;
+            document.getElementById('contenu').value = art.contenu;
+            if(art.image) {
+                document.getElementById('imgPreview').src = art.image;
+                document.getElementById('imgPreview').style.display = "block";
+                currentImageData = art.image;
+            } else {
+                document.getElementById('imgPreview').style.display = "none";
+                currentImageData = "";
+            }
+            editIndex = idx;
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        };
+
+        window.deleteArticle = function(idx) {
+            if(confirm("Voulez-vous vraiment supprimer cet article ?")) {
+                articles.splice(idx, 1);
+                localStorage.setItem('cnlds_articles', JSON.stringify(articles));
+                renderArticles();
+            }
+        };
+
+        // Initialisation
+        renderArticles();
+    </script>
+</body>
+</html>
